@@ -1,0 +1,15 @@
+# dependencies — @netlify/neon for the ratings function
+node_modules/
+
+# Netlify local state and build output
+.netlify/
+dist/
+
+# environment — DATABASE_URL and ALLOWED_ORIGIN live in Netlify's
+# dashboard, never in the repo
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store

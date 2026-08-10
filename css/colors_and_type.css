@@ -1,0 +1,227 @@
+/* Baile Research Institute — color & type foundations
+ * -------------------------------------------------------
+ * Cool twilight palette. Inter Tight throughout. Generous spacing.
+ * Import this file and use the semantic vars; avoid reaching for raw palette.
+ */
+
+/* ---------------- fonts ---------------- */
+/* Inter Tight via Google Fonts (wghts 300–700) — falls back gracefully.
+ * If you're hosting fonts locally, replace with @font-face blocks pointing at /fonts. */
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500&display=swap');
+
+:root {
+  /* ---------------- palette (raw) ---------------- */
+  /* Cool twilight — keep these out of component code, use semantic tokens below */
+  --ink-950: #070b14;       /* deepest — reserved for highest contrast text on light */
+  --ink-900: #0b1220;       /* primary dark surface */
+  --ink-800: #101a2c;       /* elevated dark surface */
+  --ink-700: #18243a;       /* card, hover on dark */
+  --ink-600: #22334f;       /* border on dark */
+
+  --slate-500: #4a6485;     /* mid cool blue — secondary ink on dark */
+  --slate-400: #7a93b2;     /* tertiary ink on dark */
+  --slate-300: #a8bcd4;     /* border on light, muted ink on dark */
+  --slate-200: #cfd9e6;     /* faint borders, dividers */
+
+  --mist-100: #e6ecf2;      /* primary ink on dark */
+  --mist-50:  #f1f4f8;      /* light surface, elevated */
+  --paper:    #f7f5ee;      /* warm off-white — primary light surface */
+  --paper-2:  #eee9db;      /* paper elevated / tinted light surface */
+
+  /* Accent — muted brass / warm gold. Used sparingly for seals, emphasis, links.
+   * Not a CTA color; it's a scholarly accent. */
+  --brass-600: #8f7a3f;   /* darker brass — used for hover on light */
+  --brass-500: #b8a46a;
+  --brass-400: #c9b98a;
+  --brass-300: #d9cda6;
+
+  /* Signal colors (used sparingly, muted) */
+  --signal-alert: #c97055;   /* warm rust, never pure red */
+  --signal-ok:    #6b8a62;   /* moss green, never pure green */
+
+  /* ---------------- semantic — light theme (default) ---------------- */
+  --bg:              var(--paper);
+  --bg-elevated:     #ffffff;
+  --bg-sunken:       var(--paper-2);
+  --bg-inverse:      var(--ink-900);
+
+  --fg:              var(--ink-900);   /* primary text */
+  --fg-muted:        #3a4a63;          /* secondary text */
+  --fg-subtle:       #6b7d96;          /* tertiary / meta */
+  --fg-faint:        #a8b2c2;          /* labels, timestamps */
+  --fg-inverse:      var(--mist-100);
+
+  --border:          #d8d3c4;          /* warm parchment border */
+  --border-strong:   #b8b2a0;
+  --border-faint:    #e8e3d4;
+
+  --accent:          var(--ink-900);   /* primary accent = ink itself (restrained) */
+  --accent-soft:     var(--ink-700);
+  --brass:           var(--brass-500);
+
+  --link:            var(--ink-900);
+  --link-hover:      var(--brass-600);
+
+  --shadow-xs: 0 1px 0 rgba(11,18,32,0.04);
+  --shadow-sm: 0 1px 2px rgba(11,18,32,0.06), 0 1px 1px rgba(11,18,32,0.04);
+  --shadow-md: 0 4px 12px rgba(11,18,32,0.06), 0 1px 2px rgba(11,18,32,0.04);
+  --shadow-lg: 0 18px 40px -12px rgba(11,18,32,0.12), 0 4px 10px -4px rgba(11,18,32,0.06);
+
+  /* ---------------- spacing scale (8px base, generous) ---------------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 144px;
+  --space-11: 200px;
+
+  /* ---------------- radii (conservative, editorial) ---------------- */
+  --radius-none: 0;
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   10px;
+  --radius-pill: 999px;
+
+  /* ---------------- type scale ---------------- */
+  --font-sans:    'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-cjk:     'Noto Serif SC', 'Songti SC', serif;  /* for occasional 林 accents */
+  --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* sizes — fluid-ish; body sits at 17px for comfortable reading */
+  --fs-display:  clamp(56px, 7vw, 96px);
+  --fs-h1:       clamp(40px, 5vw, 64px);
+  --fs-h2:       clamp(30px, 3.6vw, 44px);
+  --fs-h3:       clamp(22px, 2.4vw, 28px);
+  --fs-h4:       20px;
+  --fs-body-lg:  19px;
+  --fs-body:     17px;
+  --fs-body-sm:  15px;
+  --fs-meta:     13px;
+  --fs-micro:    11px;
+
+  --lh-tight:    1.1;
+  --lh-snug:     1.25;
+  --lh-normal:   1.5;
+  --lh-loose:    1.7;
+
+  --tracking-tight:  -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.08em;
+  --tracking-meta:   0.14em;   /* for all-caps eyebrows */
+
+  /* ---------------- motion ---------------- */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter:    cubic-bezier(0, 0, 0, 1);
+  --ease-exit:     cubic-bezier(0.4, 0, 1, 1);
+  --dur-fast:   160ms;
+  --dur-med:    280ms;
+  --dur-slow:   500ms;
+
+  /* ---------------- layout ---------------- */
+  --measure:      68ch;     /* ideal reading width */
+  --container:    1200px;
+  --container-narrow: 880px;
+  --container-wide:   1440px;
+}
+
+/* ---------------- dark theme ---------------- */
+[data-theme='dark'], .theme-dark {
+  --bg:            var(--ink-900);
+  --bg-elevated:   var(--ink-800);
+  --bg-sunken:     var(--ink-950);
+  --bg-inverse:    var(--paper);
+
+  --fg:            var(--mist-100);
+  --fg-muted:      var(--slate-300);
+  --fg-subtle:     var(--slate-400);
+  --fg-faint:      var(--slate-500);
+  --fg-inverse:    var(--ink-900);
+
+  --border:        var(--ink-600);
+  --border-strong: #2d4167;
+  --border-faint:  var(--ink-700);
+
+  --link:          var(--mist-100);
+  --link-hover:    var(--brass-400);
+
+  --shadow-xs: 0 1px 0 rgba(0,0,0,0.3);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 6px 18px rgba(0,0,0,0.45);
+  --shadow-lg: 0 24px 60px -16px rgba(0,0,0,0.6), 0 4px 12px -4px rgba(0,0,0,0.35);
+}
+
+/* ---------------- element defaults ---------------- */
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  color: var(--fg);
+  background: var(--bg);
+  font-feature-settings: 'ss01', 'cv11';
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  color: var(--fg);
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--fs-h1); line-height: var(--lh-tight); font-weight: 500; }
+h2 { font-size: var(--fs-h2); line-height: var(--lh-snug); font-weight: 500; }
+h3 { font-size: var(--fs-h3); line-height: var(--lh-snug); font-weight: 500; }
+h4 { font-size: var(--fs-h4); line-height: var(--lh-snug); font-weight: 600; letter-spacing: -0.005em; }
+
+p  { margin: 0; line-height: var(--lh-normal); text-wrap: pretty; }
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--link), transparent 70%);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+  transition: color var(--dur-fast) var(--ease-standard), text-decoration-color var(--dur-fast) var(--ease-standard);
+}
+a:hover {
+  color: var(--link-hover);
+  text-decoration-color: var(--link-hover);
+}
+
+::selection { background: var(--ink-900); color: var(--mist-100); }
+[data-theme='dark'] ::selection, .theme-dark ::selection { background: var(--brass-400); color: var(--ink-900); }
+
+/* ---------------- utility classes ---------------- */
+.eyebrow {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+  font-weight: 500;
+}
+.display  { font-size: var(--fs-display); line-height: 1.02; letter-spacing: -0.03em; font-weight: 400; }
+.lede     { font-size: var(--fs-body-lg); line-height: var(--lh-normal); color: var(--fg-muted); max-width: var(--measure); }
+.meta     { font-size: var(--fs-meta); color: var(--fg-subtle); }
+.mono     { font-family: var(--font-mono); font-size: 0.94em; }
+.cjk      { font-family: var(--font-cjk); }
+
+.hairline { height: 1px; background: var(--border); border: 0; }
+.rule-faint { height: 1px; background: var(--border-faint); border: 0; }
+
+/* Thin divider motif used throughout the identity */
+.divider-seal {
+  display: flex; align-items: center; gap: var(--space-3);
+  color: var(--fg-faint);
+}
+.divider-seal::before, .divider-seal::after {
+  content: ''; flex: 1; height: 1px; background: currentColor; opacity: 0.35;
+}

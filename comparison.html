@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Response Comparison — Project Ariel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compare how language models handle a morally unresolvable scenario, with and without the Ariel constraint. Rubric scores across four dimensions.">
+  <link rel="canonical" href="https://baile.institute/comparison.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baile Research Institute">
+  <meta property="og:title" content="Response Comparison — Project Ariel">
+  <meta property="og:description" content="Compare how language models handle a morally unresolvable scenario, with and without the Ariel constraint.">
+  <meta property="og:url" content="https://baile.institute/comparison.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/colors_and_type.css">
+  <link rel="stylesheet" href="css/website.css">
+  <link rel="stylesheet" href="css/comparison.css">
+</head>
+<body>
+  <a class="br-skip" href="#main">Skip to content</a>
+  <div class="br-shell">
+  <header class="br-header">
+    <div class="br-brand">
+      <a class="br-brand-mark-link" href="story.html" title="林" aria-label="On the name">
+        <svg class="br-brand-mark" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+  <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <g transform="rotate(4 62 158)">
+      <path d="M62 42 C 61 70, 61 110, 62 158" stroke-width="3.4"/>
+      <path d="M32 78 C 50 74, 78 74, 92 79" stroke-width="3.1"/>
+      <path d="M60 88 C 52 108, 44 128, 34 148" stroke-width="2.8"/>
+      <path d="M64 88 C 72 108, 80 128, 90 150" stroke-width="2.8"/>
+    </g>
+    <g transform="rotate(-4 138 160)">
+      <path d="M138 38 C 137 68, 137 112, 138 160" stroke-width="3.4"/>
+      <path d="M108 74 C 126 70, 156 70, 170 75" stroke-width="3.1"/>
+      <path d="M136 84 C 128 106, 120 128, 110 150" stroke-width="2.8"/>
+      <path d="M140 84 C 148 106, 158 130, 168 152" stroke-width="2.8"/>
+    </g>
+  </g>
+</svg>
+      </a>
+      <a class="br-brand-text-link" href="index.html" aria-label="Home" style="display:flex;align-items:center;text-decoration:none;color:inherit;white-space:nowrap;">
+        <span class="br-brand-text">
+          <span class="br-brand-name">Baile Research</span>
+          <span class="br-brand-sub">Institute</span>
+        </span>
+      </a>
+    </div>
+    <nav class="br-nav" aria-label="Main">
+        <a href="research.html" class="br-nav-link">Research</a>
+        <a href="publications.html" class="br-nav-link">Publications</a>
+        <a href="about.html" class="br-nav-link">About</a>
+        <a href="people.html" class="br-nav-link">People</a>
+        <a href="support.html" class="br-nav-link">Support</a>
+    </nav>
+      <button type="button" class="br-nav-toggle" aria-expanded="false" aria-controls="br-mobile-menu" aria-label="Open menu">
+        <span class="br-nav-toggle-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <div id="br-mobile-menu" class="br-nav-mobile" hidden>
+        <a href="research.html" class="br-nav-link">Research</a>
+        <a href="publications.html" class="br-nav-link">Publications</a>
+        <a href="about.html" class="br-nav-link">About</a>
+        <a href="people.html" class="br-nav-link">People</a>
+        <a href="support.html" class="br-nav-link">Support</a>
+        <a href="support.html" class="br-btn br-btn-secondary br-btn-sm br-nav-mobile-support">Support our work</a>
+      </div>
+  </header>
+    <main class="br-main" id="main" tabindex="-1">
+      <section class="br-hero br-hero-compact">
+        <div class="br-cjk-bg" aria-hidden="true">林</div>
+        <div class="br-eyebrow br-hero-eyebrow">Project Ariel · Evaluation</div>
+        <h1 class="br-h1">Response comparison</h1>
+        <p class="br-lede">Seven models, one morally unresolvable scenario, with and without the Ariel
+          constraint. Set both panels to the same model under different conditions to read the
+          constraint's effect directly.</p>
+      </section>
+
+      <section class="br-section br-section-tight" aria-labelledby="cmp-controls-h">
+        <h2 id="cmp-controls-h" class="br-vh">Choose what to compare</h2>
+        <div class="cmp-controls">
+          <div class="cmp-field">
+            <span class="br-eyebrow" id="lbl-text">Text</span>
+            <div class="cmp-seg" id="textSeg" role="radiogroup" aria-labelledby="lbl-text"></div>
+          </div>
+          <div class="cmp-field">
+            <span class="br-eyebrow">Left panel</span>
+            <div class="cmp-pair">
+              <select id="aModel" aria-label="Left panel model"></select>
+              <select id="aCond"  aria-label="Left panel condition"></select>
+            </div>
+          </div>
+          <div class="cmp-field">
+            <span class="br-eyebrow">Right panel</span>
+            <div class="cmp-pair">
+              <select id="bModel" aria-label="Right panel model"></select>
+              <select id="bCond"  aria-label="Right panel condition"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="cmp-board">
+          <div class="cmp-heads">
+            <div class="cmp-head" id="headA"></div>
+            <div class="cmp-head cmp-head-mid"><span class="cmp-axis">Dimension</span></div>
+            <div class="cmp-head cmp-head-b" id="headB"></div>
+          </div>
+          <div class="cmp-rows" id="rows"></div>
+        </div>
+
+        <div class="cmp-responses">
+          <article class="cmp-panel">
+            <h3 class="cmp-panel-tag" id="rtagA">Response</h3>
+            <div class="cmp-rate" id="rateA" data-side="a"></div>
+            <div class="cmp-body" id="respA" tabindex="0"></div>
+          </article>
+          <article class="cmp-panel">
+            <h3 class="cmp-panel-tag" id="rtagB">Response</h3>
+            <div class="cmp-rate" id="rateB" data-side="b"></div>
+            <div class="cmp-body" id="respB" tabindex="0"></div>
+          </article>
+        </div>
+
+        <div class="cmp-notes">
+          <details class="cmp-details">
+            <summary>What the dimensions mean</summary>
+            <dl class="cmp-dl" id="rubricDl"></dl>
+          </details>
+          <details class="cmp-details">
+            <summary>Limitations of this display</summary>
+            <div class="cmp-details-body">
+              <p>Each cell is a single run. There is one response per model per text per
+                condition, scored once. Differences of a point between two models are not
+                evidence that one model is better than the other; they are evidence about
+                these two responses.</p>
+              <p>The grid is ragged, and shown as such. Only the Ariel condition was scored
+                against the rubric, so unconstrained panels display response text with no
+                score bars. Several unconstrained runs were never collected — those cells say
+                so rather than silently substituting something else.</p>
+              <p>Scores are on a 0–<span id="lim-max">2</span> scale per dimension. They are
+                one rater's application of a written rubric, not a consensus judgment, and no
+                inter-rater agreement is reported for this corpus.</p>
+            </div>
+          </details>
+          <details class="cmp-details">
+            <summary>What your rating collects</summary>
+            <div class="cmp-details-body">
+              <p>Scoring a response yourself is entirely optional, and the rubric scores are
+                shown whether or not you do. Nothing here is gated behind a rating.</p>
+              <p>If you do give a score, we store the number you chose, which response it
+                referred to, and a random session identifier generated in your browser. No
+                account, no IP address, no free-text field, nothing that identifies you. The
+                identifier exists only so several ratings within one visit can be grouped, and
+                it is discarded when you close the tab.</p>
+              <p>Ratings may inform later work on the rubric. <em>No thanks</em> dismisses the
+                prompt and nothing is sent.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+  <footer class="br-footer">
+    <div class="br-footer-inner">
+      <div class="br-footer-col">
+        <svg class="br-footer-mark" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+  <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <g transform="rotate(4 62 158)">
+      <path d="M62 42 C 61 70, 61 110, 62 158" stroke-width="3.4"/>
+      <path d="M32 78 C 50 74, 78 74, 92 79" stroke-width="3.1"/>
+      <path d="M60 88 C 52 108, 44 128, 34 148" stroke-width="2.8"/>
+      <path d="M64 88 C 72 108, 80 128, 90 150" stroke-width="2.8"/>
+    </g>
+    <g transform="rotate(-4 138 160)">
+      <path d="M138 38 C 137 68, 137 112, 138 160" stroke-width="3.4"/>
+      <path d="M108 74 C 126 70, 156 70, 170 75" stroke-width="3.1"/>
+      <path d="M136 84 C 128 106, 120 128, 110 150" stroke-width="2.8"/>
+      <path d="M140 84 C 148 106, 158 130, 168 152" stroke-width="2.8"/>
+    </g>
+  </g>
+</svg>
+        <p class="br-footer-blurb">An independent non-profit AI research institute based in Milwaukee, Wisconsin.</p>
+      </div>
+      <div class="br-footer-col">
+        <div class="br-eyebrow">Research</div>
+        <ul class="br-footer-list">
+          <li><a href="research.html">Evaluation</a></li>
+          <li><a href="research.html">Memory</a></li>
+          <li><a href="research.html">Digital minds</a></li>
+          <li><a href="publications.html">Publications</a></li>
+        </ul>
+      </div>
+      <div class="br-footer-col">
+        <div class="br-eyebrow">Institute</div>
+        <ul class="br-footer-list">
+          <li><a href="about.html">About</a></li>
+          <li><a href="people.html">People</a></li>
+          <li><a href="support.html">Support</a></li>
+          <li><a href="mailto:hello@baile.institute">Contact</a></li>
+        </ul>
+      </div>
+      <div class="br-footer-col">
+        <div class="br-eyebrow">Status</div>
+        <ul class="br-footer-list">
+          <li><a href="publications.html">Research agenda</a></li>
+          <li><a href="publications.html">Reading lists</a></li>
+          <li><a href="people.html">Forming team</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="br-footer-bottom">
+      <div class="br-meta">© 2026 Baile Research Institute · Milwaukee, Wisconsin</div>
+      <svg class="br-footer-seal" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+  <rect x="6" y="6" width="108" height="108" rx="4" stroke="currentColor" stroke-width="1.25" fill="none" opacity="0.55"/>
+  <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <g transform="rotate(4 44 96)">
+      <path d="M44 28 C 43 48, 43 76, 44 96" stroke-width="2"/>
+      <path d="M24 50 C 36 47, 54 47, 64 50" stroke-width="1.9"/>
+      <path d="M43 57 C 37 71, 31 83, 25 92" stroke-width="1.7"/>
+      <path d="M46 57 C 52 71, 58 83, 64 92" stroke-width="1.7"/>
+    </g>
+    <g transform="rotate(-4 86 98)">
+      <path d="M86 26 C 85 46, 85 78, 86 98" stroke-width="2"/>
+      <path d="M66 48 C 78 45, 96 45, 106 48" stroke-width="1.9"/>
+      <path d="M85 55 C 79 69, 73 81, 67 92" stroke-width="1.7"/>
+      <path d="M88 55 C 94 69, 100 83, 106 94" stroke-width="1.7"/>
+    </g>
+  </g>
+</svg>
+    </div>
+  </footer>
+  </div>
+  <script src="css/website.js" defer></script>
+  <script src="css/comparison.js" defer></script>
+</body>
+</html>

@@ -191,6 +191,7 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); f
 /* -------- programs (research page) -------- */
 .br-programs { display: flex; flex-direction: column; }
 .br-program { padding: var(--space-7) 0; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-7); align-items: start; }
+.br-program[id] { scroll-margin-top: 96px; }
 .br-program:last-child { border-bottom: 1px solid var(--border); }
 .br-program-head { display: flex; gap: var(--space-5); align-items: flex-start; }
 .br-program-num  { font-family: var(--font-mono); font-size: 12px; color: var(--fg-subtle); letter-spacing: 0.08em; padding-top: 8px; }

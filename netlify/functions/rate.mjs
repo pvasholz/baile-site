@@ -1,5 +1,5 @@
 /**
- * POST /.netlify/functions/rate
+ * POST /api/rate   (see `config.path` at the bottom of this file)
  *
  * Accepts one visitor rating from the comparison tool and inserts it.
  * Deliberately small, and deliberately incapable of doing anything else:
@@ -7,15 +7,15 @@
  * nothing that identifies a person.
  *
  * Environment:
- *   DATABASE_URL   Neon connection string (pooled endpoint)
- *   ALLOWED_ORIGIN https://baile.institute
+ *   NETLIFY_DATABASE_URL  Neon connection string (pooled endpoint)
+ *   ALLOWED_ORIGIN        https://baile.institute
  *
- * Deploy notes are in ariel-db/README.md.
+ * Deploy notes: "Turning the ratings function on" in the top-level README.md.
  */
 
 import { neon } from '@netlify/neon';
 
-const sql = neon();                       // reads DATABASE_URL
+const sql = neon();                       // reads NETLIFY_DATABASE_URL
 
 const ORIGIN = process.env.ALLOWED_ORIGIN || 'https://baile.institute';
 

@@ -1,0 +1,9 @@
+{
+  "name": "baile-site",
+  "private": true,
+  "description": "Baile Research Institute website. Static files; this manifest exists only for the Netlify ratings function.",
+  "type": "module",
+  "dependencies": {
+    "@netlify/neon": "^0.1.2"
+  }
+}

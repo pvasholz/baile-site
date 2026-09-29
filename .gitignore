@@ -5,7 +5,7 @@ node_modules/
 .netlify/
 dist/
 
-# environment — DATABASE_URL and ALLOWED_ORIGIN live in Netlify's
+# environment — NETLIFY_DATABASE_URL and ALLOWED_ORIGIN live in Netlify's
 # dashboard, never in the repo
 .env
 .env.*

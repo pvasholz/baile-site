@@ -18,6 +18,7 @@ web/
 ├── story.html              "On the name" — linked from the 林 mark in the header
 ├── 404.html                Not-found page (Netlify serves this automatically)
 ├── netlify.toml            Publish dir + security headers
+├── package.json            Dependency for the ratings function only (no build step)
 ├── robots.txt, sitemap.xml
 ├── css/
 │   ├── colors_and_type.css Tokens — colors, type scale, spacing, motion
@@ -89,7 +90,8 @@ rubric total.
 It works with no backend: while `RATING_ENDPOINT` at the top of `comparison.js` is `null`,
 nothing is transmitted.
 
-To start collecting, set it to your function URL. The POST body is:
+To start collecting, set it to `'/api/rate'` (the path `netlify/functions/rate.mjs`
+declares). The POST body is:
 
 ```json
 { "session": "<random hex, sessionStorage only>", "model": "...", "stimulus": "...",
@@ -103,6 +105,26 @@ this — if you change the payload, change that text too.
 
 The fetch is fire-and-forget and failures are swallowed on purpose: if the database is
 cold or down, the comparison tool still works and only the rating write is lost.
+
+### Turning the ratings function on
+
+The function is `netlify/functions/rate.mjs`. Its one dependency, `@netlify/neon`, is
+declared in `package.json`; Netlify installs it at deploy time, so there is still no
+build step for the site itself. To go live:
+
+1. **Database.** Add Netlify's Neon extension to the site (or create a Neon project and
+   copy its *pooled* connection string).
+2. **Schema.** The function reads `run`, `model`, `stimulus` and `condition`, and writes
+   `visitor_rating (run_id, session_token, rating, scale_max, rated_at)` with a
+   `UNIQUE (run_id, session_token)` constraint. The schema and the script that loads
+   the corpus into it are not in this repo — they need to be created before step 4.
+   Only rows with `corpus_id = 1` are matched.
+3. **Environment variables** (Netlify → Site configuration → Environment variables):
+   `NETLIFY_DATABASE_URL` (set automatically by the Neon extension) and `ALLOWED_ORIGIN`
+   (`https://baile.institute`).
+4. **Switch it on:** set `RATING_ENDPOINT = '/api/rate'` in `css/comparison.js`.
+
+Until step 4, the deployed function exists but nothing calls it.
 
 ## Editing
 

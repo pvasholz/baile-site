@@ -11,6 +11,7 @@ them directly — what you see is what ships.
 ./
 ├── index.html              Home
 ├── research.html           The three programs
+├── digital-minds.html      Position on the status of digital minds (linked from Research, not the nav)
 ├── publications.html       Filterable list (vanilla JS)
 ├── comparison.html         Project Ariel response comparison tool
 ├── about.html              About
@@ -39,7 +40,7 @@ them directly — what you see is what ships.
 ## How it works
 
 - **Header & footer** are duplicated into every page. If you change the nav or footer,
-  change it in all eight files. The nav lives in two places per page: the desktop `<nav
+  change it in all nine files. The nav lives in two places per page: the desktop `<nav
   class="br-nav">` and the `#br-mobile-menu` panel below it. Both need the new link.
 - **Active nav highlight** — `class="br-nav-link is-active"` on the matching link, in
   both the desktop nav and the mobile panel.
@@ -149,8 +150,8 @@ the site shows must exist in the database. Re-seed after changing the JSON.
 
 ## Known gaps
 
-- The header/footer duplication is real: eight copies to keep in sync by hand. That is the
-  price of no build step, and at eight pages it is still the right trade.
+- The header/footer duplication is real: nine copies to keep in sync by hand. That is the
+  price of no build step, and at nine pages it is still the right trade.
 - Fonts load from Google Fonts. To self-host, replace the `@import` at the top of
   `colors_and_type.css` with `@font-face` blocks pointing at a local `/fonts` directory.
 - `netlify.toml` sets `publish = "."`, so deploy with this folder as the base directory.

@@ -115,7 +115,7 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); f
 .br-btn:hover .br-arrow { transform: translateX(3px); }
 
 /* -------- typography helpers -------- */
-.br-display { font-size: clamp(52px, 6.5vw, 88px); line-height: 1.04; letter-spacing: -0.03em; font-weight: 400; text-wrap: balance; margin: 0; color: var(--fg); }
+.br-display { font-size: clamp(40px, 6.5vw, 88px); line-height: 1.04; letter-spacing: -0.03em; font-weight: 400; text-wrap: balance; margin: 0; color: var(--fg); }
 .br-h1 { font-size: var(--fs-h1); line-height: 1.08; letter-spacing: -0.02em; font-weight: 500; margin: 0; }
 .br-h2 { font-size: var(--fs-h2); line-height: 1.2; letter-spacing: -0.02em; font-weight: 500; margin: 0; }
 .br-h3 { font-size: var(--fs-h3); line-height: 1.25; font-weight: 500; margin: 0; letter-spacing: -0.01em; }

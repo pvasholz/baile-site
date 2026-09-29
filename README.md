@@ -11,9 +11,9 @@ them directly — what you see is what ships.
 ./
 ├── index.html              Home
 ├── research.html           The three programs
+├── digital-minds.html      Position on the status of digital minds (linked from Research, not the nav)
 ├── publications.html       Filterable list (vanilla JS)
 ├── comparison.html         Project Ariel response comparison tool
-├── people.html             The team
 ├── about.html              About
 ├── support.html            Ways to help
 ├── story.html              "On the name" — linked from the 林 mark in the header
@@ -33,6 +33,7 @@ them directly — what you see is what ships.
 ├── data/
 │   └── ariel-comparison.json   The corpus: rubric, raters, scores, response text.
 │                               The one copy — ariel-db/scripts/seed.py reads it too.
+├── papers/                 Preprint PDFs, linked from publications.html (also on Zenodo)
 └── assets/
     └── logo-mark.svg       Favicon. Header/footer marks are inline SVG in the HTML.
 ```
@@ -142,8 +143,9 @@ the site shows must exist in the database. Re-seed after changing the JSON.
 
 ## Editing
 
-- **Add a publication**: copy an `<li class="br-pub-row" data-prog="…">` block in
-  `publications.html` and update the count default in the script at the bottom.
+- **Add a publication**: put the PDF in `papers/`, then copy an
+  `<li class="br-pub-row" data-prog="…">` block in `publications.html`. The item count
+  updates itself.
 - **Change colors or type**: edit `css/colors_and_type.css` only.
 - **Add a page**: copy `about.html`, swap the body, add the link to the desktop nav and
   the mobile panel in all pages, and add it to `sitemap.xml`.

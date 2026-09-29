@@ -22,3 +22,14 @@
   for = "/data/*"
   [headers.values]
     Cache-Control = "public, max-age=86400"
+
+# The People page was retired; its content now lives on About.
+[[redirects]]
+  from = "/people.html"
+  to = "/about.html"
+  status = 301
+
+[[redirects]]
+  from = "/people"
+  to = "/about.html"
+  status = 301

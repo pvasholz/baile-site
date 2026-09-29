@@ -148,7 +148,7 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); f
 
 /* -------- publications list -------- */
 .br-pub-list { list-style: none; margin: 0; padding: 0; }
-.br-pub-row  { display: grid; grid-template-columns: 140px 1fr 220px 24px; gap: var(--space-5); align-items: baseline; padding: var(--space-5) 0; border-top: 1px solid var(--border-faint); transition: background var(--dur-fast) var(--ease-standard); }
+.br-pub-row  { display: grid; grid-template-columns: 110px 1fr 220px 32px; gap: var(--space-5); align-items: baseline; padding: var(--space-5) 0; border-top: 1px solid var(--border-faint); transition: background var(--dur-fast) var(--ease-standard); }
 .br-pub-row:last-child { border-bottom: 1px solid var(--border-faint); }
 .br-pub-row:hover { background: color-mix(in oklab, var(--fg), transparent 97%); }
 .br-pub-kind  { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-subtle); font-weight: 500; }
@@ -156,7 +156,10 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); f
 .br-pub-title a { color: var(--fg); text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 2px; }
 .br-pub-row:hover .br-pub-title a { border-bottom-color: color-mix(in oklab, var(--fg), transparent 70%); }
 .br-pub-meta  { font-family: var(--font-mono); font-size: 12px; color: var(--fg-subtle); }
-.br-pub-arrow { color: var(--fg-faint); justify-self: end; }
+.br-pub-meta a { color: inherit; }
+.br-pub-meta a:hover { color: var(--fg); }
+.br-pub-desc  { font-size: 14px; color: var(--fg-muted); line-height: 1.5; margin: var(--space-2) 0 0; max-width: 60ch; letter-spacing: 0; }
+.br-pub-arrow { color: var(--fg-faint); justify-self: end; font-family: var(--font-mono); font-size: 12px; }
 .br-pub-row:hover .br-pub-arrow { color: var(--fg); }
 
 /* -------- mission band -------- */
@@ -177,7 +180,7 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); f
 
 /* -------- footer -------- */
 .br-footer { border-top: 1px solid var(--border-faint); padding: var(--space-8) var(--space-6) var(--space-6); background: var(--bg); }
-.br-footer-inner { max-width: var(--container); margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--space-7); }
+.br-footer-inner { max-width: var(--container); margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-7); }
 .br-footer-col { display: flex; flex-direction: column; gap: var(--space-3); }
 .br-footer-col .br-eyebrow { margin-bottom: var(--space-2); }
 .br-footer-mark { width: 34px; height: 34px; color: var(--fg); margin-bottom: var(--space-2); }
@@ -202,26 +205,14 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); f
 .br-program .br-btn-link { grid-column: 2 / 3; justify-self: start; }
 
 /* -------- filter row -------- */
-.br-filter-row { display: flex; gap: 8px; align-items: center; padding: var(--space-3) 0; margin-bottom: var(--space-3); border-bottom: 1px solid var(--border-faint); }
-.br-filter { background: transparent; border: 1px solid transparent; padding: 6px 12px; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 13px; color: var(--fg-muted); cursor: pointer; transition: all var(--dur-fast) var(--ease-standard); }
+.br-filter-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: var(--space-3) 0; margin-bottom: var(--space-3); border-bottom: 1px solid var(--border-faint); }
+.br-filter { background: transparent; border: 1px solid transparent; padding: 6px 12px; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 13px; color: var(--fg-muted); cursor: pointer; white-space: nowrap; transition: all var(--dur-fast) var(--ease-standard); }
 .br-filter:hover { color: var(--fg); }
 .br-filter.is-active { background: var(--ink-900); color: var(--mist-100); border-color: var(--ink-900); }
-.br-filter-count { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--fg-faint); }
-
-/* -------- people -------- */
-.br-people { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6) var(--space-7); }
-.br-person { display: flex; gap: var(--space-5); align-items: flex-start; padding: var(--space-5) 0; border-top: 1px solid var(--border-faint); }
-.br-person.is-vacant { opacity: 0.7; }
-.br-person-portrait { width: 72px; height: 72px; border-radius: 2px; background: var(--bg-sunken); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--fg-subtle); flex-shrink: 0; }
-.br-person-initials { font-family: var(--font-cjk); font-size: 22px; color: var(--fg-muted); letter-spacing: -0.02em; }
-.br-person-plus { font-size: 30px; color: var(--fg-faint); font-weight: 300; }
-.br-person-meta  { display: flex; flex-direction: column; gap: 4px; }
-.br-person-name  { font-size: 18px; font-weight: 500; letter-spacing: -0.005em; }
-.br-person-role  { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-subtle); font-weight: 500; }
-.br-person-bio   { font-size: 14px; color: var(--fg-muted); line-height: 1.5; margin: 4px 0 0; }
+.br-filter-count { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--fg-faint); white-space: nowrap; }
 
 /* -------- support -------- */
-.br-support-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+.br-support-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-5); }
 .br-support-card { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-6); background: var(--bg-elevated); border: 1px solid var(--border-faint); border-radius: var(--radius-md); }
 .br-support-card .br-btn { align-self: flex-start; margin-top: var(--space-3); }
 
@@ -235,7 +226,7 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); f
 .br-story-foot { margin-top: var(--space-5); }
 
 @media (max-width: 900px) {
-  .br-pillars, .br-footer-inner, .br-support-grid, .br-people { grid-template-columns: 1fr; }
+  .br-pillars, .br-footer-inner, .br-support-grid { grid-template-columns: 1fr; }
   .br-program { grid-template-columns: 1fr; }
   .br-program-copy, .br-program-topics, .br-program .br-btn-link { grid-column: auto; }
   .br-newsletter { grid-template-columns: 1fr; }

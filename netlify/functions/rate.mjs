@@ -6,16 +6,19 @@
  * it cannot read ratings back, cannot touch any other table, and stores
  * nothing that identifies a person.
  *
- * Environment:
- *   NETLIFY_DATABASE_URL  Neon connection string (pooled endpoint)
- *   ALLOWED_ORIGIN        https://baile.institute
+ * Environment (Netlify → Site configuration → Environment variables):
+ *   DATABASE_URL   Neon connection string (pooled endpoint) — the same
+ *                  string ariel-db/scripts/seed.py is given
+ *   ALLOWED_ORIGIN https://baile.institute
  *
  * Deploy notes: "Turning the ratings function on" in the top-level README.md.
  */
 
-import { neon } from '@netlify/neon';
+import { neon } from '@neondatabase/serverless';
 
-const sql = neon();                       // reads NETLIFY_DATABASE_URL
+// Created on first use, so a missing DATABASE_URL gives a clean 503
+// rather than a crash at import.
+let sql = null;
 
 const ORIGIN = process.env.ALLOWED_ORIGIN || 'https://baile.institute';
 
@@ -73,6 +76,11 @@ export default async (request) => {
   if (rating < 0 || rating > scale_max) return fail(400, 'rating out of range');
 
   if (throttled(session)) return fail(429, 'slow down');
+
+  if (!sql) {
+    if (!process.env.DATABASE_URL) return fail(503, 'ratings are not configured');
+    sql = neon(process.env.DATABASE_URL);
+  }
 
   try {
     // Resolve the cell to a run_id. If the triple does not name a real

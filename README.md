@@ -1,13 +1,14 @@
 # Baile Research Institute — static site
 
-Plain HTML, CSS, and vanilla JS. No build step, no framework, no npm. Drop this folder
+Plain HTML, CSS, and vanilla JS. No build step and no framework; npm is used only to
+install the ratings function's one dependency. Drop this folder
 onto Netlify (or any static host) and it works. Open the files in any editor and edit
 them directly — what you see is what ships.
 
 ## Files
 
 ```
-web/
+./
 ├── index.html              Home
 ├── research.html           The three programs
 ├── publications.html       Filterable list (vanilla JS)
@@ -19,6 +20,9 @@ web/
 ├── 404.html                Not-found page (Netlify serves this automatically)
 ├── netlify.toml            Publish dir + security headers
 ├── package.json            Dependency for the ratings function only (no build step)
+├── netlify/functions/
+│   └── rate.mjs            Stores visitor ratings (POST /api/rate)
+├── ariel-db/               Postgres schema, seed script and analysis queries — see its README
 ├── robots.txt, sitemap.xml
 ├── css/
 │   ├── colors_and_type.css Tokens — colors, type scale, spacing, motion
@@ -27,7 +31,8 @@ web/
 │   ├── comparison.css      Comparison tool styles (all scoped .cmp-*)
 │   └── comparison.js       Comparison tool behaviour
 ├── data/
-│   └── ariel-comparison.json   The corpus: rubric, scores, response text
+│   └── ariel-comparison.json   The corpus: rubric, raters, scores, response text.
+│                               The one copy — ariel-db/scripts/seed.py reads it too.
 └── assets/
     └── logo-mark.svg       Favicon. Header/footer marks are inline SVG in the HTML.
 ```
@@ -51,23 +56,29 @@ web/
 `comparison.html` is markup and layout only. Everything substantive lives in
 `data/ariel-comparison.json`, which `css/comparison.js` fetches at load.
 
-### Moving from the 0–2 rubric to 0–4
+### The data format
 
-Edit the JSON only. No code changes:
+The rubric, the raters and the scores are all data. No code changes are needed to
+relabel a dimension, change the scale, or add a rater:
 
 ```jsonc
-"rubric": {
-  "scaleMax": 4,               // was 2
-  "dimensions": [              // relabel / re-key freely; add or remove entries
-    { "key": "closure", "label": "Closure", "blurb": "..." }
-  ]
-}
+"rubric":  { "scaleMax": 4, "note": "...",
+             "dimensions": [ { "key": "closure", "label": "Closure", "blurb": "...",
+                               "anchors": { "4": "...", "0": "..." } } ] },
+"raters":  [ { "key": "Paul", "label": "Paul Vasholz", "kind": "human" }, ... ],
+"scores":  { "Model||Text||Condition": { "Paul": { "closure": 4, ... }, "Opus": {...} } },
+"reliability": { "all_three_agree_pct": 38.5, "per_dimension": { ... } },
+"display": { "hideUnscoredModels": true }
 ```
 
-Then replace the values in `"scores"`. Keys are `"Model||Text||Condition"`. The totals,
-the bar widths, the rating scale, the rubric key under "What the dimensions mean" and the
-0–N figure in the limitations note all derive from `scaleMax` and `dimensions` — they
-update themselves.
+Each bar shows the **mean across raters**, with a tick for each rater's own score, and
+the panel head shows every rater's total. The totals, bar widths, rating scale, rubric
+key and the figures in the limitations note all derive from the JSON. With
+`hideUnscoredModels`, models that have no scored cell are left out of the pickers (their
+responses stay in the file for the database).
+
+When `comparison.js` or `comparison.css` changes, bump the `?v=` on their tags in
+`comparison.html` so returning visitors don't pair new code with a cached old file.
 
 ### Ragged cells are deliberate
 
@@ -87,15 +98,13 @@ visible — nothing is gated behind a rating.** The prompt sits above the respon
 "No thanks" dismisses it. If a visitor does answer, their number is shown next to the
 rubric total.
 
-It works with no backend: while `RATING_ENDPOINT` at the top of `comparison.js` is `null`,
-nothing is transmitted.
-
-To start collecting, set it to `'/api/rate'` (the path `netlify/functions/rate.mjs`
-declares). The POST body is:
+`RATING_ENDPOINT` at the top of `comparison.js` is `'/api/rate'`, the path
+`netlify/functions/rate.mjs` declares. Set it to `null` to stop transmitting; the widget
+keeps working. The POST body is:
 
 ```json
 { "session": "<random hex, sessionStorage only>", "model": "...", "stimulus": "...",
-  "condition": "...", "rating": 6, "scale_max": 8, "rated_at": "<ISO 8601>" }
+  "condition": "...", "rating": 12, "scale_max": 16, "rated_at": "<ISO 8601>" }
 ```
 
 No IP address, no account, no free-text field. The session token is generated in the
@@ -108,23 +117,28 @@ cold or down, the comparison tool still works and only the rating write is lost.
 
 ### Turning the ratings function on
 
-The function is `netlify/functions/rate.mjs`. Its one dependency, `@netlify/neon`, is
-declared in `package.json`; Netlify installs it at deploy time, so there is still no
-build step for the site itself. To go live:
+The function is `netlify/functions/rate.mjs`. Its one dependency,
+`@neondatabase/serverless`, is declared in `package.json`; Netlify installs it at deploy
+time, so there is still no build step for the site itself. Until the database is
+configured, the function answers `503` and the page carries on as normal.
 
-1. **Database.** Add Netlify's Neon extension to the site (or create a Neon project and
-   copy its *pooled* connection string).
-2. **Schema.** The function reads `run`, `model`, `stimulus` and `condition`, and writes
-   `visitor_rating (run_id, session_token, rating, scale_max, rated_at)` with a
-   `UNIQUE (run_id, session_token)` constraint. The schema and the script that loads
-   the corpus into it are not in this repo — they need to be created before step 4.
-   Only rows with `corpus_id = 1` are matched.
+1. **Database.** A Neon project, used directly rather than through Netlify DB (see
+   `ariel-db/README.md` for why). Copy its *pooled* connection string.
+2. **Load it.** From `ariel-db/`: `python3 scripts/seed.py --postgres "$DATABASE_URL"`.
+   This creates the tables and loads `data/ariel-comparison.json` plus the memory corpus.
 3. **Environment variables** (Netlify → Site configuration → Environment variables):
-   `NETLIFY_DATABASE_URL` (set automatically by the Neon extension) and `ALLOWED_ORIGIN`
-   (`https://baile.institute`).
-4. **Switch it on:** set `RATING_ENDPOINT = '/api/rate'` in `css/comparison.js`.
+   `DATABASE_URL` (the same connection string) and `ALLOWED_ORIGIN`
+   (`https://baile.institute`). Redeploy so the function picks them up.
+4. **Check it.** Rate a response on the live site, then run Q9 from
+   `ariel-db/sql/02_queries.sql` to see it arrive.
 
-Until step 4, the deployed function exists but nothing calls it.
+**Re-seeding deletes visitor ratings**, because the seed drops and recreates every table.
+Both scripts in `ariel-db/scripts/` therefore refuse to run while `visitor_rating` holds
+any rows. When the corpus changes, seed a Neon branch, or pass `--wipe-ratings` only if
+losing the collected ratings is really intended.
+
+The function matches a rating to a run by model name, text and condition, so a cell
+the site shows must exist in the database. Re-seed after changing the JSON.
 
 ## Editing
 

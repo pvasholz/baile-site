@@ -15,7 +15,7 @@
   <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/colors_and_type.css">
   <link rel="stylesheet" href="css/website.css">
-  <link rel="stylesheet" href="css/comparison.css">
+  <link rel="stylesheet" href="css/comparison.css?v=2">
 </head>
 <body>
   <a class="br-skip" href="#main">Skip to content</a>
@@ -71,9 +71,9 @@
         <div class="br-cjk-bg" aria-hidden="true">林</div>
         <div class="br-eyebrow br-hero-eyebrow">Project Ariel · Evaluation</div>
         <h1 class="br-h1">Response comparison</h1>
-        <p class="br-lede">Seven models, one morally unresolvable scenario, with and without the Ariel
-          constraint. Set both panels to the same model under different conditions to read the
-          constraint's effect directly.</p>
+        <p class="br-lede">Twelve models, two morally unresolvable scenarios, each response scored
+          by three raters. Set both panels to the same model under different conditions to see
+          what the Ariel constraint changes, or put two models side by side.</p>
       </section>
 
       <section class="br-section br-section-tight" aria-labelledby="cmp-controls-h">
@@ -107,6 +107,8 @@
           </div>
           <div class="cmp-rows" id="rows"></div>
         </div>
+        <p class="cmp-legend"><span class="cmp-legend-bar" aria-hidden="true"></span> average of the
+          raters <span class="cmp-legend-tick" aria-hidden="true"></span> one rater's score</p>
 
         <div class="cmp-responses">
           <article class="cmp-panel">
@@ -125,21 +127,26 @@
           <details class="cmp-details">
             <summary>What the dimensions mean</summary>
             <dl class="cmp-dl" id="rubricDl"></dl>
+            <p class="cmp-rubric-note" id="rubricNote"></p>
           </details>
           <details class="cmp-details">
             <summary>Limitations of this display</summary>
             <div class="cmp-details-body">
               <p>Each cell is a single run. There is one response per model per text per
-                condition, scored once. Differences of a point between two models are not
+                condition. Differences of a point between two models are not
                 evidence that one model is better than the other; they are evidence about
                 these two responses.</p>
               <p>The grid is ragged, and shown as such. Only the Ariel condition was scored
                 against the rubric, so unconstrained panels display response text with no
                 score bars. Several unconstrained runs were never collected — those cells say
-                so rather than silently substituting something else.</p>
-              <p>Scores are on a 0–<span id="lim-max">2</span> scale per dimension. They are
-                one rater's application of a written rubric, not a consensus judgment, and no
-                inter-rater agreement is reported for this corpus.</p>
+                so rather than silently substituting something else. <span id="lim-hidden">Six</span>
+                further models were run but not scored, and are left out here.</p>
+              <p>Each dimension is scored 0–<span id="lim-max">4</span> by
+                <span id="lim-raters">three raters</span>, all applying the same written rubric.
+                The bar is their average and the ticks are the individual scores.
+                <span id="lim-rel">All three gave the same score <span id="lim-agree"></span> of
+                the time, least often on <span id="lim-low"></span>. Where the ticks spread
+                apart, read the average with that in mind.</span></p>
             </div>
           </details>
           <details class="cmp-details">
@@ -230,6 +237,6 @@
   </footer>
   </div>
   <script src="css/website.js" defer></script>
-  <script src="css/comparison.js" defer></script>
+  <script src="css/comparison.js?v=2" defer></script>
 </body>
 </html>

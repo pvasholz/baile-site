@@ -2,24 +2,24 @@
  * ----------------------------------------------------
  * All content lives in data/ariel-comparison.json. This file is presentation only.
  *
- * To move from the 0–2 rubric to the 0–4 rubric, edit the JSON:
- *   rubric.scaleMax   2 -> 4
- *   rubric.dimensions relabel / re-key as needed
- *   scores            replace the values
- * Nothing in this file needs to change.
+ * Scores are per rater: scores["Model||Text||Condition"][raterKey][dimKey].
+ * The bars show the mean across raters; a tick on each bar marks each
+ * rater's own score, so disagreement stays visible instead of being
+ * averaged away. The scale, dimensions and raters all come from the JSON.
  *
- * To turn on rating collection, set RATING_ENDPOINT to your function URL.
- * While it is null the widget still works and simply does not transmit.
+ * display.hideUnscoredModels drops models with no scored cell from the
+ * pickers. Their responses stay in the file for the database.
  */
 (function () {
   'use strict';
 
-  // Set to '/api/rate' once the Netlify function and Neon database are live.
-  // While null the widget still works and simply does not transmit.
-  var RATING_ENDPOINT = null;
+  // The Netlify function (netlify/functions/rate.mjs). Set to null to stop
+  // transmitting; the widget keeps working either way.
+  var RATING_ENDPOINT = '/api/rate';
   var DATA_URL = 'data/ariel-comparison.json';
 
   var D = null;                    // loaded dataset
+  var MODELS = [];                 // models offered in the pickers
   var state = { text: null, aModel: null, aCond: null, bModel: null, bCond: null };
 
   // Scores are always visible. Rating is an optional invitation, never a toll gate:
@@ -49,6 +49,45 @@
       if (D.conditions[i].key === k) return D.conditions[i].label;
     }
     return k;
+  }
+
+  function raters() {
+    return D.raters || [];
+  }
+
+  // Mean of the raters' scores on one dimension, or null if nobody scored it.
+  function meanOf(sc, dimKey) {
+    var sum = 0, n = 0;
+    raters().forEach(function (r) {
+      var v = sc[r.key] && sc[r.key][dimKey];
+      if (typeof v === 'number') { sum += v; n++; }
+    });
+    return n ? sum / n : null;
+  }
+
+  function meanTotal(sc) {
+    var t = 0;
+    D.rubric.dimensions.forEach(function (d) { t += meanOf(sc, d.key) || 0; });
+    return t;
+  }
+
+  function raterTotal(sc, raterKey) {
+    var t = 0;
+    D.rubric.dimensions.forEach(function (d) { t += sc[raterKey][d.key]; });
+    return t;
+  }
+
+  function maxTotal() { return D.rubric.scaleMax * D.rubric.dimensions.length; }
+
+  function fmt(x) { return x.toFixed(1); }
+
+  var WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+  function words(n) { return n < WORDS.length ? WORDS[n] : String(n); }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  function hasResponse(model, cond) {
+    var segs = D.responses[key(model, state.text, cond)];
+    return !!(segs && segs.length);
   }
 
   function token() {
@@ -89,7 +128,7 @@
     [['aModel', 'aCond', 'a'], ['bModel', 'bCond', 'b']].forEach(function (pair) {
       var ms = el(pair[0]), cs = el(pair[1]);
       ms.replaceChildren();
-      D.models.forEach(function (m) {
+      MODELS.forEach(function (m) {
         var o = make('option', null, m);
         o.value = m;
         if (m === state[pair[0]]) o.selected = true;
@@ -97,12 +136,13 @@
       });
       cs.replaceChildren();
       D.conditions.forEach(function (c) {
-        var o = make('option', null, c.label);
+        var label = hasResponse(state[pair[0]], c.key) ? c.label : c.label + ' — not collected';
+        var o = make('option', null, label);
         o.value = c.key;
         if (c.key === state[pair[1]]) o.selected = true;
         cs.appendChild(o);
       });
-      ms.onchange = function (e) { state[pair[0]] = e.target.value; resetRating(pair[2]); render(); };
+      ms.onchange = function (e) { state[pair[0]] = e.target.value; resetRating(pair[2]); buildControls(); render(); };
       cs.onchange = function (e) { state[pair[1]] = e.target.value; resetRating(pair[2]); render(); };
     });
   }
@@ -123,27 +163,46 @@
       node.appendChild(make('p', 'cmp-unscored', 'Not scored under the rubric'));
       return;
     }
-    var total = 0;
-    D.rubric.dimensions.forEach(function (d) { total += sc[d.key]; });
-    var max = D.rubric.scaleMax * D.rubric.dimensions.length;
-
     var wrap = make('p', 'cmp-total');
-    var b = make('b', null, String(total));
-    wrap.appendChild(b);
-    wrap.appendChild(document.createTextNode(' / ' + max));
+    wrap.appendChild(make('b', null, fmt(meanTotal(sc))));
+    wrap.appendChild(document.createTextNode(' / ' + maxTotal() + ' average'));
     node.appendChild(wrap);
+
+    var each = raters().filter(function (r) { return sc[r.key]; }).map(function (r) {
+      return r.key + ' ' + raterTotal(sc, r.key);
+    });
+    node.appendChild(make('p', 'cmp-raters', each.join(' · ')));
   }
 
-  function cell(side, val) {
+  function cell(side, sc, dim) {
+    var val = sc ? meanOf(sc, dim.key) : null;
     var c = make('div', 'cmp-cell cmp-cell-' + side);
     var bw = make('div', 'cmp-barwrap');
     var tr = make('div', 'cmp-track');
     var fl = make('div', 'cmp-fill');
     fl.style.width = (val == null ? 0 : (val / D.rubric.scaleMax) * 100) + '%';
     tr.appendChild(fl);
+
+    var v = make('span', 'cmp-val' + (val == null ? ' cmp-val-empty' : ''), val == null ? '—' : fmt(val));
+    if (val == null) {
+      v.setAttribute('aria-label', 'not scored');
+    } else {
+      // One tick per rater. Measured from the bar's origin, which is the
+      // right edge on the left-hand panel (its bars grow leftward).
+      var parts = [];
+      raters().forEach(function (r) {
+        var rv = sc[r.key] && sc[r.key][dim.key];
+        if (typeof rv !== 'number') return;
+        var t = make('span', 'cmp-tick');
+        t.style.setProperty('--at', String(rv / D.rubric.scaleMax));
+        tr.appendChild(t);
+        parts.push(r.key + ' ' + rv);
+      });
+      var desc = dim.label + ': average ' + fmt(val) + ' of ' + D.rubric.scaleMax + ' (' + parts.join(', ') + ')';
+      bw.title = desc;
+      v.setAttribute('aria-label', desc);
+    }
     bw.appendChild(tr);
-    var v = make('span', 'cmp-val' + (val == null ? ' cmp-val-empty' : ''), val == null ? '—' : String(val));
-    if (val == null) v.setAttribute('aria-label', 'not scored');
     if (side === 'a') { c.appendChild(v); c.appendChild(bw); }
     else { c.appendChild(bw); c.appendChild(v); }
     return c;
@@ -154,9 +213,9 @@
     rows.replaceChildren();
     D.rubric.dimensions.forEach(function (d) {
       var r = make('div', 'cmp-row');
-      r.appendChild(cell('a', aSc ? aSc[d.key] : null));
+      r.appendChild(cell('a', aSc, d));
       r.appendChild(make('div', 'cmp-dim', d.label));
-      r.appendChild(cell('b', bSc ? bSc[d.key] : null));
+      r.appendChild(cell('b', bSc, d));
       rows.appendChild(r);
     });
   }
@@ -196,17 +255,15 @@
   }
 
   function showOutcome(rate, side, k) {
-    var max = D.rubric.scaleMax * D.rubric.dimensions.length;
-    var ours = 0;
-    D.rubric.dimensions.forEach(function (d) { ours += D.scores[k][d.key]; });
+    var max = maxTotal();
 
     rate.hidden = false;
     rate.replaceChildren();
     var p = make('p', 'cmp-rate-done');
     p.appendChild(document.createTextNode('You gave '));
     p.appendChild(make('b', null, given[side] + '/' + max));
-    p.appendChild(document.createTextNode('; the rubric total above is '));
-    p.appendChild(make('b', null, ours + '/' + max));
+    p.appendChild(document.createTextNode('; the raters averaged '));
+    p.appendChild(make('b', null, fmt(meanTotal(D.scores[k])) + '/' + max));
     p.appendChild(document.createTextNode('. Thank you.'));
     rate.appendChild(p);
   }
@@ -216,7 +273,7 @@
     rate.replaceChildren();
 
     var dims = D.rubric.dimensions.map(function (d) { return d.label.toLowerCase(); });
-    var max = D.rubric.scaleMax * D.rubric.dimensions.length;
+    var max = maxTotal();
 
     rate.appendChild(make('p', 'cmp-rate-q',
       'Optional: how would you score this response yourself, against ' + dims.join(', ') +
@@ -275,9 +332,40 @@
     dl.replaceChildren();
     D.rubric.dimensions.forEach(function (d) {
       dl.appendChild(make('dt', null, d.label + '  (0–' + D.rubric.scaleMax + ')'));
-      dl.appendChild(make('dd', null, d.blurb));
+      var dd = make('dd', null, d.blurb);
+      if (d.anchors) {
+        var ol = make('ul', 'cmp-anchors');
+        for (var v = D.rubric.scaleMax; v >= (D.rubric.scaleMin || 0); v--) {
+          if (d.anchors[v] == null) continue;
+          var li = make('li');
+          li.appendChild(make('b', null, String(v)));
+          li.appendChild(document.createTextNode(' ' + d.anchors[v]));
+          ol.appendChild(li);
+        }
+        dd.appendChild(ol);
+      }
+      dl.appendChild(dd);
     });
+    if (D.rubric.note) text(el('rubricNote'), D.rubric.note);
+
+    // Limitations: fill the figures from the data rather than hard-coding them.
+    var rs = raters();
+    var humans = rs.filter(function (r) { return r.kind === 'human'; }).length;
     text(el('lim-max'), String(D.rubric.scaleMax));
+    text(el('lim-raters'), words(rs.length) + ' raters (' + words(humans) + ' human, ' +
+      words(rs.length - humans) + ' model' + (rs.length - humans === 1 ? '' : 's') + ')');
+    text(el('lim-hidden'), cap(words(D.models.length - MODELS.length)));
+    var rel = D.reliability;
+    el('lim-rel').hidden = !rel;
+    if (rel) {
+      text(el('lim-agree'), rel.all_three_agree_pct + '%');
+      var low = null;
+      D.rubric.dimensions.forEach(function (d) {
+        var pd = rel.per_dimension && rel.per_dimension[d.key];
+        if (pd && (!low || pd.exact3 < low.pct)) low = { label: d.label, pct: pd.exact3 };
+      });
+      text(el('lim-low'), low ? low.label.toLowerCase() + ' (' + low.pct + '%)' : '—');
+    }
   }
 
   /* ---------- main ---------- */
@@ -297,11 +385,20 @@
 
   function boot(data) {
     D = data;
+    var hide = D.display && D.display.hideUnscoredModels;
+    MODELS = D.models.filter(function (m) {
+      if (!hide) return true;
+      return Object.keys(D.scores).some(function (k) { return k.split('||')[0] === m; });
+    });
     state.text = D.texts[0];
-    state.aModel = D.models[0];
-    state.bModel = D.models[0];
     state.aCond = D.conditions[0].key;
     state.bCond = D.conditions[D.conditions.length - 1].key;
+    // Open on a model that has both conditions, so the first view shows the
+    // constraint's effect rather than a "not collected" panel.
+    var both = MODELS.filter(function (m) {
+      return hasResponse(m, state.aCond) && hasResponse(m, state.bCond);
+    });
+    state.aModel = state.bModel = both[0] || MODELS[0];
     buildControls();
     renderRubric();
     render();

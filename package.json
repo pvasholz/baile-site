@@ -4,6 +4,6 @@
   "description": "Baile Research Institute website. Static files; this manifest exists only for the Netlify ratings function.",
   "type": "module",
   "dependencies": {
-    "@netlify/neon": "^0.1.2"
+    "@neondatabase/serverless": "^1.1.0"
   }
 }

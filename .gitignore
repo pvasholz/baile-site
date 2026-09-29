@@ -1,11 +1,11 @@
-# dependencies — @netlify/neon for the ratings function
+# dependencies — @neondatabase/serverless for the ratings function
 node_modules/
 
 # Netlify local state and build output
 .netlify/
 dist/
 
-# environment — NETLIFY_DATABASE_URL and ALLOWED_ORIGIN live in Netlify's
+# environment — DATABASE_URL and ALLOWED_ORIGIN live in Netlify's
 # dashboard, never in the repo
 .env
 .env.*
@@ -13,3 +13,8 @@ dist/
 
 # macOS
 .DS_Store
+
+# Python caches, and local output from ariel-db/scripts (SQLite file, reports)
+__pycache__/
+*.pyc
+ariel-db/build/

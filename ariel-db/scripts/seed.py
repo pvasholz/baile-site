@@ -8,9 +8,13 @@ Seed the Ariel scoring database from the source files.
 Idempotent: it drops and recreates everything, so running it twice is
 safe and produces byte-identical contents.
 
+That includes visitor_rating. Once the live site has collected ratings,
+re-seeding would destroy them, so the script refuses to run against a
+database that holds any unless you pass --wipe-ratings.
+
 Sources
-    data/ariel-comparison.json      frontier corpus — the same file the
-                                    website loads, so the site and the
+    ../data/ariel-comparison.json   frontier corpus — read from the site's
+                                    own data folder, so the site and the
                                     database cannot drift apart
     data/ariel_memory_D2_scores.csv memory corpus — two raters, 39 runs
 """
@@ -29,7 +33,8 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 SQL = ROOT / "sql"
 
-FRONTIER_JSON = DATA / "ariel-comparison.json"
+# The one copy of the frontier corpus is the file the website serves.
+FRONTIER_JSON = ROOT.parent / "data" / "ariel-comparison.json"
 MEMORY_CSV = DATA / "ariel_memory_D2_scores.csv"
 
 
@@ -96,6 +101,29 @@ def postgres_to_sqlite(ddl: str) -> str:
     s = re.sub(r"\s+CASCADE;", ";", s)          # DROP TABLE ... CASCADE
     s = s.replace("BEGIN;", "").replace("COMMIT;", "")
     return s
+
+
+def count_visitor_ratings(conn) -> int:
+    """Rows in visitor_rating, or 0 if the table does not exist yet."""
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM visitor_rating")
+        return cur.fetchone()[0]
+    except Exception:
+        conn.rollback()             # Postgres aborts the transaction on error
+        return 0
+
+
+def refuse_if_ratings(conn, wipe: bool) -> None:
+    n = count_visitor_ratings(conn)
+    if n and not wipe:
+        sys.exit(
+            f"refusing to seed: visitor_rating holds {n} rating(s) from the live site,\n"
+            "and seeding drops every table. Seed a Neon branch instead, or pass\n"
+            "--wipe-ratings if you really mean to delete them."
+        )
+    if n:
+        print(f"--wipe-ratings: deleting {n} visitor rating(s)")
 
 
 # ---------------------------------------------------------------------
@@ -321,6 +349,8 @@ def main():
     g.add_argument("--sqlite", metavar="PATH", help="path to a SQLite file to create")
     g.add_argument("--postgres", metavar="DSN",
                    help="Postgres connection string (or set DATABASE_URL)")
+    ap.add_argument("--wipe-ratings", action="store_true",
+                    help="seed even though visitor_rating holds live ratings (deletes them)")
     args = ap.parse_args()
 
     ddl = (SQL / "01_schema.sql").read_text(encoding="utf-8")
@@ -330,6 +360,8 @@ def main():
         path = Path(args.sqlite)
         path.parent.mkdir(parents=True, exist_ok=True)
         if path.exists():
+            with sqlite3.connect(path) as old:
+                refuse_if_ratings(old, args.wipe_ratings)
             path.unlink()
         conn = sqlite3.connect(path)
         conn.execute("PRAGMA foreign_keys = ON")
@@ -342,6 +374,7 @@ def main():
             sys.exit("pip install 'psycopg[binary]' to seed Postgres")
         dsn = args.postgres or os.environ.get("DATABASE_URL")
         conn = psycopg.connect(dsn)
+        refuse_if_ratings(conn, args.wipe_ratings)
         db = Db("postgres", conn)
         db.script(ddl)
 

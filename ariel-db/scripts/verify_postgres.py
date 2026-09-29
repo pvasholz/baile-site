@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """
-Run the schema, the seed and all ten queries against a real Postgres
+Run the schema, the seed and all twelve queries against a real Postgres
 server, and write a report.
 
     pip install 'psycopg[binary]'
     export DATABASE_URL='postgresql://...'          # pooled Neon string
-    python3 scripts/verify_postgres.py
+    python3 scripts/verify_postgres.py [--wipe-ratings]
 
 Writes build/postgres-report.txt. Every query runs in its own
 transaction, so one failure does not hide the others — the point is to
 find all the dialect problems in one pass, not the first one.
 
 Nothing here is destructive to anything but this database: it drops and
-recreates the Ariel tables, and touches nothing else.
+recreates the Ariel tables, and touches nothing else. Because that
+includes visitor_rating, it refuses to run while the table holds live
+ratings unless --wipe-ratings is given — point it at a Neon branch.
 """
 
 from __future__ import annotations
@@ -39,6 +41,8 @@ QUERY_NAMES = [
     "Q8  arm ranking",
     "Q9  visitor ratings",
     "Q10 integrity checks",
+    "Q11 frontier inter-rater spread",
+    "Q12 frontier rater severity",
 ]
 
 
@@ -114,7 +118,9 @@ def check_dsn(dsn: str) -> str | None:
 
 
 def main() -> int:
-    dsn = os.environ.get("DATABASE_URL") or (sys.argv[1] if len(sys.argv) > 1 else None)
+    wipe = "--wipe-ratings" in sys.argv
+    argv = [a for a in sys.argv[1:] if a != "--wipe-ratings"]
+    dsn = os.environ.get("DATABASE_URL") or (argv[0] if argv else None)
     if not dsn:
         sys.exit("set DATABASE_URL, or pass the connection string as an argument")
 
@@ -133,6 +139,12 @@ def main() -> int:
         import psycopg
     except ImportError:
         sys.exit("pip install 'psycopg[binary]'")
+
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import seed as seed_mod
+
+    with psycopg.connect(dsn) as conn:
+        seed_mod.refuse_if_ratings(conn, wipe)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     report: list[str] = []
@@ -180,9 +192,6 @@ def main() -> int:
     say("SEED  (scripts/seed.py --postgres)")
     say("-" * 68)
     try:
-        sys.path.insert(0, str(ROOT / "scripts"))
-        import seed as seed_mod
-
         with psycopg.connect(dsn) as conn:
             db = seed_mod.Db("postgres", conn)
             for row in seed_mod.CORPORA:
@@ -197,7 +206,7 @@ def main() -> int:
             db.commit()
         for k in ("frontier_runs", "frontier_scores", "memory_runs", "memory_scores"):
             say(f"    {k:18} {counts[k]}")
-        expected = {"frontier_runs": 22, "frontier_scores": 56,
+        expected = {"frontier_runs": 41, "frontier_scores": 288,
                     "memory_runs": 39, "memory_scores": 234}
         if counts == expected:
             say("    counts match the SQLite run exactly")

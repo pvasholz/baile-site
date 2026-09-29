@@ -13,8 +13,11 @@ ariel-db/
 │   ├── seed.py               Loads both corpora into SQLite or Postgres
 │   └── verify_postgres.py    Runs schema + seed + all queries, writes a report
 └── data/
-    ├── ariel-comparison.json      frontier corpus (same file the site serves)
-    └── ariel_memory_D2_scores.csv memory corpus
+    ├── ariel_memory_D2_scores.csv memory corpus
+    └── venice_ariel_log_*.csv     raw run logs
+
+The frontier corpus is ../data/ariel-comparison.json — the file the website serves.
+There is deliberately only one copy, so the site and the database cannot drift apart.
 ```
 
 ## Quick start
@@ -30,7 +33,10 @@ python3 scripts/seed.py --postgres "$DATABASE_URL"
 psql "$DATABASE_URL" -f sql/02_queries.sql
 ```
 
-Seeding is idempotent — it drops and recreates, so run it as often as you like.
+Seeding is idempotent — it drops and recreates, so run it as often as you like
+*until the site has collected visitor ratings*. After that it refuses, because dropping
+`visitor_rating` would delete them; seed a Neon branch, or pass `--wipe-ratings` if you
+mean it. `verify_postgres.py` has the same guard.
 
 Expected result: 80 runs (41 frontier, 39 memory), 522 scores (288 frontier from
 three raters across 24 cells, 234 memory from two raters across 39 runs).
@@ -165,11 +171,14 @@ reason. Keep SQLite for local analysis, where `seed.py --sqlite` already puts it
 
 1. Create a Neon project. Copy the **pooled** connection string.
 2. `python3 scripts/seed.py --postgres "$DATABASE_URL"`
-3. In Netlify: set `DATABASE_URL` and `ALLOWED_ORIGIN` as environment variables.
-4. `npm i @netlify/neon` in the site directory.
-5. In `web/css/comparison.js`, set `RATING_ENDPOINT = '/api/rate'`.
+3. In Netlify: set `DATABASE_URL` and `ALLOWED_ORIGIN` as environment variables, and
+   redeploy.
 
-The function is `web/netlify/functions/rate.mjs`. It can only insert into
+The site side is already done: `package.json` declares `@neondatabase/serverless` (Neon's
+own driver, not the Netlify wrapper, which reads a different variable name), and
+`RATING_ENDPOINT` in `css/comparison.js` is set to `'/api/rate'`.
+
+The function is `netlify/functions/rate.mjs`. It can only insert into
 `visitor_rating`, cannot read ratings back, and rejects any cell triple that
 does not resolve to a real run.
 
@@ -187,9 +196,11 @@ in the same commit.
 
 ## Verification
 
-Verified end to end against **PostgreSQL 18.4 on Neon**: schema applied cleanly,
-seed produced 61 runs and 290 scores matching the source files exactly, and all
-ten queries ran with zero failures. `FILTER`, `NTILE`, `STRING_AGG(... ORDER BY
+Verified end to end against **PostgreSQL 18.4 on Neon** on 10 August 2026, when the
+frontier corpus was the earlier single-rater version (22 runs): schema applied
+cleanly, the seed matched the source files exactly, and all ten queries then in the
+file ran with zero failures. It has not been re-run since the three-rater corpus and
+Q11–Q12 were added; `verify_postgres.py` now expects 41 frontier runs and 288 scores. `FILTER`, `NTILE`, `STRING_AGG(... ORDER BY
 ...)`, `BOOL_OR` and `STDDEV_SAMP` all executed natively.
 
 Q10 returns zero violations on all six checks against seeded data — including
@@ -225,7 +236,7 @@ export DATABASE_URL='postgresql://...'      # pooled connection string
 python3 scripts/verify_postgres.py
 ```
 
-It applies the schema, seeds, and runs all ten queries — each in its own
+It applies the schema, seeds, and runs all twelve queries — each in its own
 transaction, so one dialect failure does not mask the rest — then writes
 `build/postgres-report.txt`. The report records the server version and database
 name but never the connection string, so it is safe to read and share. `build/`

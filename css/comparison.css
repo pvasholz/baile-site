@@ -90,7 +90,29 @@
 .cmp-fill { position: absolute; top: 0; bottom: 0; background: var(--brass-600); transition: width var(--dur-slow) var(--ease-standard); }
 .cmp-cell-a .cmp-fill { right: 0; }
 .cmp-cell-b .cmp-fill { left: 0; }
-.cmp-val { font-family: var(--font-mono); font-size: var(--fs-meta); color: var(--fg); width: 26px; text-align: center; flex: none; }
+.cmp-val { font-family: var(--font-mono); font-size: var(--fs-meta); color: var(--fg); width: 32px; text-align: center; flex: none; }
+
+/* One tick per rater. --at is the score as a fraction of the scale, measured
+   from the bar's origin: the left edge on the right-hand panel, the right
+   edge on the left-hand panel. */
+.cmp-tick {
+  position: absolute; top: -1px; bottom: -1px; width: 2px;
+  background: var(--fg); opacity: 0.75;
+  left: calc((100% - 2px) * var(--at));
+}
+.cmp-cell-a .cmp-tick { left: auto; right: calc((100% - 2px) * var(--at)); }
+
+.cmp-raters { margin: var(--space-2) 0 0; font-family: var(--font-mono); font-size: 12px; color: var(--fg-subtle); }
+
+.cmp-legend { margin: var(--space-3) 0 0; font-size: var(--fs-meta); color: var(--fg-subtle); display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.cmp-legend-bar { display: inline-block; width: 22px; height: 10px; background: var(--brass-600); border-radius: var(--radius-xs); }
+.cmp-legend-tick { display: inline-block; width: 2px; height: 14px; background: var(--fg); opacity: 0.75; margin-left: var(--space-3); }
+
+.cmp-anchors { list-style: none; margin: var(--space-2) 0 0; padding: 0; }
+.cmp-anchors li { font-size: var(--fs-meta); color: var(--fg-subtle); padding: 1px 0; }
+.cmp-anchors b { font-family: var(--font-mono); font-weight: 500; color: var(--fg-muted); display: inline-block; width: 1.2em; }
+.cmp-rubric-note { max-width: var(--measure); font-size: var(--fs-meta); color: var(--fg-subtle); font-style: italic; margin: 0 0 var(--space-4); }
+.cmp-rubric-note:empty { display: none; }
 .cmp-val-empty { color: var(--fg-faint); }
 
 /* -------- response panels -------- */
@@ -170,6 +192,7 @@
   .cmp-dim { text-align: left; order: -1; }
   .cmp-cell-a { justify-content: flex-start; }
   .cmp-cell-a .cmp-fill { left: 0; right: auto; }
+  .cmp-cell-a .cmp-tick { right: auto; left: calc((100% - 2px) * var(--at)); }
   .cmp-barwrap { max-width: none; }
 }
 

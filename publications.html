@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <title>Publications — Baile Research Institute</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Papers, notes, and works in progress from the Baile Research Institute.">
+  <meta name="description" content="Preprints, position statements, and tools from the Baile Research Institute.">
   <link rel="canonical" href="https://baile.institute/publications.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Baile Research Institute">
   <meta property="og:title" content="Publications — Baile Research Institute">
-  <meta property="og:description" content="Papers, notes, and works in progress from the Baile Research Institute.">
+  <meta property="og:description" content="Preprints, position statements, and tools from the Baile Research Institute.">
   <meta property="og:url" content="https://baile.institute/publications.html">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Publications — Baile Research Institute">
-  <meta name="twitter:description" content="Papers, notes, and works in progress from the Baile Research Institute.">
+  <meta name="twitter:description" content="Preprints, position statements, and tools from the Baile Research Institute.">
   <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/colors_and_type.css">
   <link rel="stylesheet" href="css/website.css">
@@ -68,8 +68,8 @@
     <main class="br-main" id="main" tabindex="-1">
       <section class="br-hero br-hero-compact">
         <div class="br-eyebrow br-hero-eyebrow">Publications</div>
-        <h1 class="br-h1">The work before the work.</h1>
-        <p class="br-lede">We do not have formal publications yet. This page will hold the agenda, notes, reading lists, and eventually the papers.</p>
+        <h1 class="br-h1">Publications</h1>
+        <p class="br-lede">Preprints, position statements, and tools from Baile's research. The preprints are also archived on Zenodo.</p>
       </section>
       <section class="br-section br-section-tight">
         <div class="br-filter-row" role="group" aria-label="Filter by programme">
@@ -77,32 +77,44 @@
           <button type="button" class="br-filter" data-filter="evaluation" aria-pressed="false">Evaluation</button>
           <button type="button" class="br-filter" data-filter="memory" aria-pressed="false">Memory</button>
           <button type="button" class="br-filter" data-filter="digital-minds" aria-pressed="false">Digital minds</button>
-          <div class="br-filter-count" role="status" aria-live="polite">4 items</div>
+          <div class="br-filter-count" role="status" aria-live="polite"></div>
         </div>
         <ul class="br-pub-list">
-          <li class="br-pub-row" data-prog="evaluation">
-            <div class="br-pub-kind">Agenda</div>
-            <div class="br-pub-title">First-year research agenda</div>
-            <div class="br-pub-meta">In preparation</div>
-            <div class="br-pub-arrow"></div>
+          <li class="br-pub-row" data-prog="memory">
+            <div class="br-pub-kind">Preprint</div>
+            <div class="br-pub-title">
+              <a href="papers/vasholz-2026-silence-of-stored-rules.pdf">The Silence of Stored Rules: Provenance and the Authority of Retrieved Constraints</a>
+              <p class="br-pub-desc">When a behavioral rule is stored in an AI memory system and retrieved, how much does it still bind? Across ten ways of delivering the same rule, retrieved rules carried less weight than the rule typed live.</p>
+            </div>
+            <div class="br-pub-meta">2026 · <a href="https://zenodo.org/records/21662512">Zenodo</a> · <a href="https://github.com/pvasholz/memory/releases/tag/v1.0">Data</a></div>
+            <div class="br-pub-arrow">PDF</div>
           </li>
           <li class="br-pub-row" data-prog="digital-minds">
-            <div class="br-pub-kind">Questions</div>
-            <div class="br-pub-title">Digital minds: cautious starting assumptions</div>
-            <div class="br-pub-meta">Drafting notes</div>
-            <div class="br-pub-arrow"></div>
-          </li>
-          <li class="br-pub-row" data-prog="memory">
-            <div class="br-pub-kind">Reading list</div>
-            <div class="br-pub-title">Memory, retrieval, and enactivist cognition</div>
-            <div class="br-pub-meta">Being assembled</div>
-            <div class="br-pub-arrow"></div>
+            <div class="br-pub-kind">Position</div>
+            <div class="br-pub-title">
+              <a href="digital-minds.html">The status of digital minds</a>
+              <p class="br-pub-desc">Why the evidence supports neither answer yet, and why an open question still calls for care.</p>
+            </div>
+            <div class="br-pub-meta">2026</div>
+            <div class="br-pub-arrow">→</div>
           </li>
           <li class="br-pub-row" data-prog="evaluation">
-            <div class="br-pub-kind">Reading list</div>
-            <div class="br-pub-title">Epistemic restraint and evaluation methods</div>
-            <div class="br-pub-meta">Being assembled</div>
-            <div class="br-pub-arrow"></div>
+            <div class="br-pub-kind">Tool</div>
+            <div class="br-pub-title">
+              <a href="comparison.html">Ariel response comparison</a>
+              <p class="br-pub-desc">Eighteen models' answers to two moral dilemmas, with and without the Ariel constraint, scored by three raters.</p>
+            </div>
+            <div class="br-pub-meta">Interactive</div>
+            <div class="br-pub-arrow">→</div>
+          </li>
+          <li class="br-pub-row" data-prog="evaluation">
+            <div class="br-pub-kind">Preprint</div>
+            <div class="br-pub-title">
+              <a href="papers/vasholz-2026-architecture-of-evasion.pdf">The Architecture of Evasion in Conversational AI: An Exploratory Study</a>
+              <p class="br-pub-desc">The original Ariel study: can constraint-based prompting induce epistemic restraint? One model, three texts, and a layered pattern of evasion.</p>
+            </div>
+            <div class="br-pub-meta">January 2026 · <a href="https://zenodo.org/records/18285121">Zenodo</a></div>
+            <div class="br-pub-arrow">PDF</div>
           </li>
         </ul>
       </section>
@@ -193,11 +205,11 @@
           applyFilter(b.getAttribute('data-filter'));
         });
       });
-      // Deep links from research.html, e.g. publications.html?prog=memory
+      // Deep links, e.g. publications.html?prog=memory; otherwise show all
+      // (which also fills in the item count, so it never needs hand-editing).
       var prog = new URLSearchParams(location.search).get('prog');
-      if (prog && document.querySelector('.br-filter[data-filter="' + CSS.escape(prog) + '"]')) {
-        applyFilter(prog);
-      }
+      var known = prog && document.querySelector('.br-filter[data-filter="' + CSS.escape(prog) + '"]');
+      applyFilter(known ? prog : 'all');
     })();
   </script>
   <script src="css/website.js" defer></script>

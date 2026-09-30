@@ -17,6 +17,12 @@
   [headers.values]
     Cache-Control = "public, max-age=3600"
 
+# Font files never change in place; a new version gets a new file name.
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 # The corpus is versioned with the site, so it can be cached hard.
 [[headers]]
   for = "/data/*"

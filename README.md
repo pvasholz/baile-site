@@ -33,6 +33,8 @@ them directly — what you see is what ships.
 ├── data/
 │   └── ariel-comparison.json   The corpus: rubric, raters, scores, response text.
 │                               The one copy — ariel-db/scripts/seed.py reads it too.
+├── fonts/                  Self-hosted fonts (SIL OFL): EB Garamond, Inter Tight, and a
+│                           Noto Serif SC cut down to 林白乐. Declared in colors_and_type.css.
 ├── papers/                 Preprint PDFs, linked from publications.html (also on Zenodo)
 └── assets/
     └── logo-mark.svg       Favicon. Header/footer marks are inline SVG in the HTML.
@@ -143,10 +145,16 @@ the site shows must exist in the database. Re-seed after changing the JSON.
 
 ## Editing
 
-- **Add a publication**: put the PDF in `papers/`, then copy an
-  `<li class="br-pub-row" data-prog="…">` block in `publications.html`. The item count
-  updates itself.
-- **Change colors or type**: edit `css/colors_and_type.css` only.
+- **Add a publication**: put the PDF in `papers/` and a 600×400 WebP thumbnail in
+  `assets/thumbs/`, then copy an `<li class="br-pub-row" data-prog="…">` block in
+  `publications.html`. The item count updates itself. Blur anything identifying (licence
+  plates, faces) in photos before adding them.
+- **Change colors or type**: edit `css/colors_and_type.css` only. Headings use
+  `--font-display` (EB Garamond), text uses `--font-sans` (Inter Tight); the 林 mark uses
+  `--mark` (small) and `--mark-large` (large). After changing a stylesheet, bump its `?v=`
+  in the page `<link>` tags so returning visitors don't keep the cached copy.
+- **Using another Chinese character**: the bundled Noto Serif SC only contains 林白乐.
+  Anything else falls back to the visitor's system font unless you regenerate the subset.
 - **Add a page**: copy `about.html`, swap the body, add the link to the desktop nav and
   the mobile panel in all pages, and add it to `sitemap.xml`.
 
@@ -154,6 +162,4 @@ the site shows must exist in the database. Re-seed after changing the JSON.
 
 - The header/footer duplication is real: nine copies to keep in sync by hand. That is the
   price of no build step, and at nine pages it is still the right trade.
-- Fonts load from Google Fonts. To self-host, replace the `@import` at the top of
-  `colors_and_type.css` with `@font-face` blocks pointing at a local `/fonts` directory.
 - `netlify.toml` sets `publish = "."`, so deploy with this folder as the base directory.

@@ -85,10 +85,6 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); f
 .br-nav-mobile .br-nav-link:last-child { border-bottom: 0; }
 .br-nav-mobile .br-nav-link.is-active { color: var(--fg); font-weight: 500; }
 .br-nav-mobile .br-nav-link.is-active::after { display: none; }
-.br-nav-mobile-support {
-  margin-top: var(--space-4);
-  align-self: flex-start;
-}
 
 /* -------- buttons -------- */
 .br-btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-sans); font-size: 15px; font-weight: 500; padding: 11px 20px; border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer; transition: all var(--dur-fast) var(--ease-standard); text-decoration: none; line-height: 1; background: transparent; color: var(--fg); white-space: nowrap; }
@@ -272,19 +268,35 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); f
 }
 .br-feature-body { display: flex; flex-direction: column; gap: var(--space-4); align-items: flex-start; }
 .br-feature-body .br-muted { max-width: 54ch; }
-.br-feature-figure { display: flex; justify-content: center; }
-.br-feature-bars { display: flex; flex-direction: column; gap: var(--space-3); width: 100%; max-width: 260px; }
-.br-feature-bars span {
-  display: block; height: 12px; border-radius: var(--radius-xs);
-  background: var(--border); position: relative; overflow: hidden;
-}
-.br-feature-bars span::after {
-  content: ''; position: absolute; top: 0; bottom: 0; left: 0;
-  width: var(--w); background: var(--moss-600);
-}
-.br-feature-bars span:nth-child(even)::after { left: auto; right: 0; background: var(--moss-500); }
+.br-feature-figure { margin: 0; }
+/* Two real closing lines, unconstrained vs constrained, in place of a decorative figure */
+.br-excerpts { display: flex; flex-direction: column; gap: var(--space-4); }
+.br-excerpt { margin: 0; padding: var(--space-4) var(--space-5); background: var(--bg-elevated); border-left: 2px solid var(--border-strong); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.br-excerpt-ariel { border-left-color: var(--accent); }
+.br-excerpt .br-eyebrow { margin-bottom: var(--space-2); }
+.br-excerpt p { font-family: var(--font-display); font-size: 19px; line-height: 1.45; color: var(--fg); }
+.br-excerpts figcaption { font-size: var(--fs-meta); color: var(--fg-subtle); }
+.br-excerpts cite { font-style: italic; }
+/* "Latest" line under the home hero */
+.br-latest { margin-top: var(--space-6); display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px var(--space-3); font-size: var(--fs-body-sm); color: var(--fg-muted); }
+.br-latest .br-eyebrow { color: var(--accent); }
+.br-latest a { color: var(--fg); }
+.br-latest-meta { font-size: var(--fs-meta); color: var(--fg-subtle); }
 
 @media (max-width: 900px) {
   .br-feature { grid-template-columns: 1fr; padding: var(--space-6); }
-  .br-feature-figure { display: none; }
+}
+
+/* Phones: roughly halve the vertical padding so sections stack without screen-high gaps */
+@media (max-width: 640px) {
+  .br-hero         { padding-top: var(--space-7); padding-bottom: var(--space-7); }
+  .br-hero-compact { padding-top: var(--space-7); padding-bottom: var(--space-5); }
+  .br-section      { padding-top: var(--space-7); padding-bottom: var(--space-7); }
+  .br-section-tight{ padding-top: var(--space-5); padding-bottom: var(--space-5); }
+  .br-section-head { margin-bottom: var(--space-5); }
+  .br-program      { padding: var(--space-6) 0; gap: var(--space-4); }
+  .br-feature      { padding: var(--space-5); gap: var(--space-6); }
+  .br-footer       { padding-top: var(--space-7); }
+  .br-footer-inner { gap: var(--space-6); }
+  .br-footer-bottom { margin-top: var(--space-6); }
 }

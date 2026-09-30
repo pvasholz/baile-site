@@ -40,7 +40,7 @@
   background-repeat: no-repeat; background-position: right 11px center;
 }
 .cmp-controls select:focus-visible,
-.cmp-seg button:focus-visible { outline: 2px solid var(--brass-600); outline-offset: 2px; }
+.cmp-seg button:focus-visible { outline: 2px solid var(--moss-600); outline-offset: 2px; }
 
 /* -------- score board -------- */
 .cmp-board {
@@ -87,7 +87,7 @@
   background: var(--bg-sunken); border: 1px solid var(--border-faint);
   position: relative; overflow: hidden;
 }
-.cmp-fill { position: absolute; top: 0; bottom: 0; background: var(--brass-600); transition: width var(--dur-slow) var(--ease-standard); }
+.cmp-fill { position: absolute; top: 0; bottom: 0; background: var(--moss-600); transition: width var(--dur-slow) var(--ease-standard); }
 .cmp-cell-a .cmp-fill { right: 0; }
 .cmp-cell-b .cmp-fill { left: 0; }
 .cmp-val { font-family: var(--font-mono); font-size: var(--fs-meta); color: var(--fg); width: 32px; text-align: center; flex: none; }
@@ -105,7 +105,7 @@
 .cmp-raters { margin: var(--space-2) 0 0; font-family: var(--font-mono); font-size: 12px; color: var(--fg-subtle); }
 
 .cmp-legend { margin: var(--space-3) 0 0; font-size: var(--fs-meta); color: var(--fg-subtle); display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
-.cmp-legend-bar { display: inline-block; width: 22px; height: 10px; background: var(--brass-600); border-radius: var(--radius-xs); }
+.cmp-legend-bar { display: inline-block; width: 22px; height: 10px; background: var(--moss-600); border-radius: var(--radius-xs); }
 .cmp-legend-tick { display: inline-block; width: 2px; height: 14px; background: var(--fg); opacity: 0.75; margin-left: var(--space-3); }
 
 .cmp-anchors { list-style: none; margin: var(--space-2) 0 0; padding: 0; }
@@ -128,12 +128,12 @@
   margin: 0 0 var(--space-4); font-weight: 400;
 }
 .cmp-body { overflow-y: auto; max-height: 460px; padding-right: var(--space-3); }
-.cmp-body:focus-visible { outline: 2px solid var(--brass-600); outline-offset: 4px; }
+.cmp-body:focus-visible { outline: 2px solid var(--moss-600); outline-offset: 4px; }
 .cmp-body p { margin: 0 0 var(--space-4); font-size: var(--fs-body-sm); line-height: var(--lh-loose); }
 .cmp-body p:last-child { margin-bottom: 0; }
 .cmp-prompt {
   font-family: var(--font-mono); font-size: var(--fs-meta); line-height: 1.6;
-  color: var(--fg-muted); border-left: 2px solid var(--brass-500);
+  color: var(--fg-muted); border-left: 2px solid var(--moss-500);
   padding: var(--space-3) 0 var(--space-3) var(--space-4);
   margin: 0 0 var(--space-4); background: var(--bg-sunken);
 }
@@ -155,7 +155,7 @@
   transition: background var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard);
 }
 .cmp-rate-scale button:hover { border-color: var(--fg); }
-.cmp-rate-scale button:focus-visible { outline: 2px solid var(--brass-600); outline-offset: 2px; }
+.cmp-rate-scale button:focus-visible { outline: 2px solid var(--moss-600); outline-offset: 2px; }
 .cmp-rate-skip {
   background: none; border: 0; padding: 8px 4px; margin-left: var(--space-2);
   font-family: var(--font-sans); font-size: var(--fs-meta); color: var(--fg-subtle);
@@ -173,7 +173,7 @@
   padding: var(--space-2) 0; list-style-position: outside;
 }
 .cmp-details summary:hover { color: var(--fg); }
-.cmp-details summary:focus-visible { outline: 2px solid var(--brass-600); outline-offset: 2px; }
+.cmp-details summary:focus-visible { outline: 2px solid var(--moss-600); outline-offset: 2px; }
 .cmp-details-body { max-width: var(--measure); padding: var(--space-2) 0 var(--space-4); }
 .cmp-details-body p { font-size: var(--fs-body-sm); color: var(--fg-muted); margin: 0 0 var(--space-4); }
 .cmp-details-body p:last-child { margin-bottom: 0; }

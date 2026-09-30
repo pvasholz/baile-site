@@ -1,39 +1,71 @@
 /* Baile Research Institute — color & type foundations
  * -------------------------------------------------------
- * Cool twilight palette. Inter Tight throughout. Generous spacing.
+ * "Morning grove": pale sage paper, evergreen ink, moss accents, and a gold
+ * reserved for the 林 mark. EB Garamond for headings, Inter Tight for text.
  * Import this file and use the semantic vars; avoid reaching for raw palette.
  */
 
 /* ---------------- fonts ---------------- */
-/* Inter Tight via Google Fonts (wghts 300–700) — falls back gracefully.
- * If you're hosting fonts locally, replace with @font-face blocks pointing at /fonts. */
-@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500&display=swap');
+/* Self-hosted from /fonts (SIL Open Font License), Latin subsets only.
+ * Noto Serif SC is cut down to the three characters the site uses: 林白乐. */
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url(../fonts/eb-garamond-latin.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../fonts/eb-garamond-italic-latin.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter Tight';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(../fonts/inter-tight-latin.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Noto Serif SC';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(../fonts/noto-serif-sc-lin-bai-le.woff2) format('woff2');
+}
 
 :root {
   /* ---------------- palette (raw) ---------------- */
-  /* Cool twilight — keep these out of component code, use semantic tokens below */
-  --ink-950: #070b14;       /* deepest — reserved for highest contrast text on light */
-  --ink-900: #0b1220;       /* primary dark surface */
-  --ink-800: #101a2c;       /* elevated dark surface */
-  --ink-700: #18243a;       /* card, hover on dark */
-  --ink-600: #22334f;       /* border on dark */
+  /* Keep these out of component code; use the semantic tokens below. */
+  --ink-950: #0f1b15;       /* deepest evergreen */
+  --ink-900: #17281f;       /* primary text, primary buttons */
+  --ink-800: #22382c;       /* button hover */
+  --ink-700: #2f4a3b;
+  --ink-600: #3d5a49;
 
-  --slate-500: #4a6485;     /* mid cool blue — secondary ink on dark */
-  --slate-400: #7a93b2;     /* tertiary ink on dark */
-  --slate-300: #a8bcd4;     /* border on light, muted ink on dark */
-  --slate-200: #cfd9e6;     /* faint borders, dividers */
+  --sage-500: #6b7c72;      /* tertiary text */
+  --sage-400: #8e9c93;
+  --sage-300: #b3bdae;      /* strong borders */
+  --sage-200: #d5dccf;      /* borders */
 
-  --mist-100: #e6ecf2;      /* primary ink on dark */
-  --mist-50:  #f1f4f8;      /* light surface, elevated */
-  --paper:    #f7f5ee;      /* warm off-white — primary light surface */
-  --paper-2:  #eee9db;      /* paper elevated / tinted light surface */
+  --mist-100: #f3f4ee;      /* text on dark */
+  --mist-50:  #f8f9f5;
+  --paper:    #f3f4ee;      /* pale sage paper — primary surface */
+  --paper-2:  #e7eadf;      /* sunken / tinted surface */
 
-  /* Accent — muted brass / warm gold. Used sparingly for seals, emphasis, links.
-   * Not a CTA color; it's a scholarly accent. */
-  --brass-600: #8f7a3f;   /* darker brass — used for hover on light */
-  --brass-500: #b8a46a;
-  --brass-400: #c9b98a;
-  --brass-300: #d9cda6;
+  /* Moss — the working accent: score bars, active states, link hover. */
+  --moss-600: #5d7a5f;
+  --moss-500: #8aa37f;
+  --moss-400: #a9bd9f;
+  --moss-300: #c8d6c0;
+
+  /* Gold — reserved for the 林 mark. The deeper shade holds up at logo size;
+   * the lighter one is for the large characters on the story and home pages. */
+  --gold-600: #9c8646;
+  --gold-500: #b8a46a;
 
   /* Signal colors (used sparingly, muted) */
   --signal-alert: #c97055;   /* warm rust, never pure red */
@@ -41,31 +73,31 @@
 
   /* ---------------- semantic — light theme (default) ---------------- */
   --bg:              var(--paper);
-  --bg-elevated:     #ffffff;
+  --bg-elevated:     #fbfcf8;
   --bg-sunken:       var(--paper-2);
   --bg-inverse:      var(--ink-900);
 
   --fg:              var(--ink-900);   /* primary text */
-  --fg-muted:        #3a4a63;          /* secondary text */
-  --fg-subtle:       #6b7d96;          /* tertiary / meta */
-  --fg-faint:        #a8b2c2;          /* labels, timestamps */
+  --fg-muted:        #3e5247;          /* secondary text */
+  --fg-subtle:       #56675e;          /* tertiary / meta */
+  --fg-faint:        #a7b2aa;          /* labels, timestamps */
   --fg-inverse:      var(--mist-100);
 
-  --border:          #d8d3c4;          /* warm parchment border */
-  --border-strong:   #b8b2a0;
-  --border-faint:    #e8e3d4;
+  --border:          var(--sage-200);
+  --border-strong:   var(--sage-300);
+  --border-faint:    #e3e8dc;
 
-  --accent:          var(--ink-900);   /* primary accent = ink itself (restrained) */
-  --accent-soft:     var(--ink-700);
-  --brass:           var(--brass-500);
+  --accent:          var(--moss-600);
+  --mark:            var(--gold-600);  /* the small 林 logo */
+  --mark-large:      var(--gold-500);  /* large 林 characters */
 
   --link:            var(--ink-900);
-  --link-hover:      var(--brass-600);
+  --link-hover:      var(--moss-600);
 
-  --shadow-xs: 0 1px 0 rgba(11,18,32,0.04);
-  --shadow-sm: 0 1px 2px rgba(11,18,32,0.06), 0 1px 1px rgba(11,18,32,0.04);
-  --shadow-md: 0 4px 12px rgba(11,18,32,0.06), 0 1px 2px rgba(11,18,32,0.04);
-  --shadow-lg: 0 18px 40px -12px rgba(11,18,32,0.12), 0 4px 10px -4px rgba(11,18,32,0.06);
+  --shadow-xs: 0 1px 0 rgba(23,40,31,0.04);
+  --shadow-sm: 0 1px 2px rgba(23,40,31,0.06), 0 1px 1px rgba(23,40,31,0.04);
+  --shadow-md: 0 4px 12px rgba(23,40,31,0.06), 0 1px 2px rgba(23,40,31,0.04);
+  --shadow-lg: 0 18px 40px -12px rgba(23,40,31,0.12), 0 4px 10px -4px rgba(23,40,31,0.06);
 
   /* ---------------- spacing scale (8px base, generous) ---------------- */
   --space-1:  4px;
@@ -89,6 +121,7 @@
   --radius-pill: 999px;
 
   /* ---------------- type scale ---------------- */
+  --font-display: 'EB Garamond', Garamond, Georgia, serif;  /* headings */
   --font-sans:    'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif;
   --font-cjk:     'Noto Serif SC', 'Songti SC', serif;  /* for occasional 林 accents */
   --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -138,17 +171,17 @@
   --bg-inverse:    var(--paper);
 
   --fg:            var(--mist-100);
-  --fg-muted:      var(--slate-300);
-  --fg-subtle:     var(--slate-400);
-  --fg-faint:      var(--slate-500);
+  --fg-muted:      var(--sage-300);
+  --fg-subtle:     var(--sage-400);
+  --fg-faint:      var(--sage-500);
   --fg-inverse:    var(--ink-900);
 
   --border:        var(--ink-600);
-  --border-strong: #2d4167;
+  --border-strong: var(--ink-600);
   --border-faint:  var(--ink-700);
 
   --link:          var(--mist-100);
-  --link-hover:    var(--brass-400);
+  --link-hover:    var(--moss-400);
 
   --shadow-xs: 0 1px 0 rgba(0,0,0,0.3);
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
@@ -198,7 +231,7 @@ a:hover {
 }
 
 ::selection { background: var(--ink-900); color: var(--mist-100); }
-[data-theme='dark'] ::selection, .theme-dark ::selection { background: var(--brass-400); color: var(--ink-900); }
+[data-theme='dark'] ::selection, .theme-dark ::selection { background: var(--moss-400); color: var(--ink-900); }
 
 /* ---------------- utility classes ---------------- */
 .eyebrow {

@@ -145,9 +145,10 @@ the site shows must exist in the database. Re-seed after changing the JSON.
 
 ## Editing
 
-- **Add a publication**: put the PDF in `papers/`, then copy an
-  `<li class="br-pub-row" data-prog="…">` block in `publications.html`. The item count
-  updates itself.
+- **Add a publication**: put the PDF in `papers/` and a 600×400 WebP thumbnail in
+  `assets/thumbs/`, then copy an `<li class="br-pub-row" data-prog="…">` block in
+  `publications.html`. The item count updates itself. Blur anything identifying (licence
+  plates, faces) in photos before adding them.
 - **Change colors or type**: edit `css/colors_and_type.css` only. Headings use
   `--font-display` (EB Garamond), text uses `--font-sans` (Inter Tight); the 林 mark uses
   `--mark` (small) and `--mark-large` (large). After changing a stylesheet, bump its `?v=`

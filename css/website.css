@@ -294,6 +294,8 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); f
   .br-section      { padding-top: var(--space-7); padding-bottom: var(--space-7); }
   .br-section-tight{ padding-top: var(--space-5); padding-bottom: var(--space-5); }
   .br-section-head { margin-bottom: var(--space-5); }
+  /* a compact page heading followed directly by text: don't stack both paddings */
+  .br-hero-compact + .br-section { padding-top: var(--space-4); }
   .br-program      { padding: var(--space-6) 0; gap: var(--space-4); }
   .br-feature      { padding: var(--space-5); gap: var(--space-6); }
   .br-footer       { padding-top: var(--space-7); }
